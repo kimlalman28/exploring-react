@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-//import logo from './logo.svg';
 import './App.css';
-import Person from './Person/Person.js'
+import Person from './Person/Person.js';
+// import Radium, {StyleRoot} from 'radium';
 
 class App extends Component {
   state = {
@@ -50,7 +50,12 @@ class App extends Component {
       font: 'inherit',
       border: '1px solid blue',
       padding: '8px',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      //radium feature of pseudo-selectors
+      // ':hover': {
+      //   backgroundColor: 'lightgreen',
+      //   color: 'black'
+      // }
     }
 
     let persons = null;
@@ -73,16 +78,28 @@ class App extends Component {
       );
 
       style.backgroundColor = 'red';
+      // style[':hover'] = {
+      //   backgroundColor: 'salmon',
+      //   color: 'black'
+      // }
     }
 
+    const classes = []
+    if (this.state.persons.length <= 2) classes.push('red');
+    if(this.state.persons.length <= 1) classes.push('bold');
+
     return (
-      <div className="App">
-        <h1>People</h1>
-        <button
-          onClick={this.togglePersonsHandler}
-          style={style}>Toggle Persons</button>
-            {persons}
-      </div>
+      // Radium - used for media queries, keyframes, etc - wrap entire application
+      //<StyleRoot>
+        <div className="App">
+          <h1>People</h1>
+          <p className={classes.join(' ')}>People in Circle</p>
+          <button
+            onClick={this.togglePersonsHandler}
+            style={style}>Toggle Persons</button>
+              {persons}
+        </div>
+      // </StyleRoot>
     );
   }
 }
