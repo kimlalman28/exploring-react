@@ -1,36 +1,39 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 import Person from './Person/Person.js'
 
 class App extends Component {
   state = {
     persons: [
-      {name: 'Kim', age: 22},
-      {name: 'Jon', age: 24},
-      {name: 'Max', age: 21}
+      {id: 'j8dd', name: 'Kim', age: 22},
+      {id: 'hur3', name: 'Jon', age: 24},
+      {id: 'ola9', name: 'Max', age: 21}
     ],
     showPersons: false
   }
 
-  switchNameHandler = (newName) => {
-    this.setState({
-      persons: [
-        {name: newName, age: 22},
-        {name: 'John', age: 24},
-        {name: 'Max', age: 29}
-      ]
-    })
+  nameChangedHandler = (e, id) => {
+    const personIndex = this.state.persons.findIndex((p) => {
+      return p.id === id;
+    });
+
+    const person = {
+      ...this.state.persons[personIndex]
+    };
+
+    person.name = e.target.value;
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState({persons:persons})
   }
 
-  nameChangedHandler = (e) => {
-    this.setState({
-      persons: [
-        {name: 'Kim', age: 22},
-        {name: e.target.value, age: 24},
-        {name: 'Max', age: 29}
-      ]
-    })
+  deletePersonHandler = (personIndex) => {
+    //const persons = this.state.persons.slice();
+    const persons = [...this.state.persons]; //spread op to copy array
+    persons.splice(personIndex, 1);
+    this.setState({persons: persons})
   }
 
   togglePersonsHandler = () => {
@@ -42,7 +45,8 @@ class App extends Component {
 
   render() {
     const style = {
-      backgroundColor: 'white',
+      backgroundColor: 'green',
+      color: 'white',
       font: 'inherit',
       border: '1px solid blue',
       padding: '8px',
@@ -54,20 +58,21 @@ class App extends Component {
     if(this.state.showPersons) {
       persons = (
         <div>
-          <Person
-            name={this.state.persons[0].name}
-            age={this.state.persons[0].age}/>
-          <Person
-            name={this.state.persons[1].name}
-            age={this.state.persons[1].age}
-            click={this.switchNameHandler.bind(this, 'Kimmy')}
-            change={this.nameChangedHandler}
-            >My Hobbies: Reading</Person>
-          <Person
-            name={this.state.persons[2].name}
-            age={this.state.persons[2].age}/>
+          {this.state.persons.map( (person, index) => {
+            return (
+              <Person
+                key={person.id} //key for react
+                click={() => this.deletePersonHandler(index)} //delete person
+                name={person.name}
+                age={person.age}
+                changed={(event) => this.nameChangedHandler(event, person.id)} //change name from input
+              />
+            )
+          })}
         </div>
-      )
+      );
+
+      style.backgroundColor = 'red';
     }
 
     return (
